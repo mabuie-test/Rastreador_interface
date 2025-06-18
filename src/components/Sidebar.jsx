@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-export default function Sidebar({ onSelect }) {
-  const [devices, setDevices] = useState([]);
-
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/api/devices`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    .then(res => setDevices(res.data))
-    .catch(() => {/* tratar erro */});
-  }, []);
+export default function Sidebar() {
+  const links = [
+    { to: '/dashboard',      label: 'Dashboard' },
+    { to: '/tenants',        label: 'Tenants' },
+    { to: '/users',          label: 'Utilizadores' },
+    { to: '/devices/manage', label: 'Dispositivos' }
+  ];
 
   return (
     <aside className="w-64 bg-gray-100 p-4 overflow-auto">
-      <h2 className="text-lg mb-4">Dispositivos</h2>
-      {devices.map(d => (
-        <div
-          key={d._id}
-          className="p-2 mb-2 bg-white cursor-pointer"
-          onClick={() => onSelect(d)}
+      <h2 className="text-xl font-bold mb-4">Gestão</h2>
+      {links.map(link => (
+        <NavLink
+          key={link.to}
+          to={link.to}
+          className={({ isActive }) =>
+            `block p-2 mb-2 rounded ${isActive ? 'bg-blue-200' : 'hover:bg-gray-200'}`
+          }
         >
-          <div className="font-bold">{d.label}</div>
-          <div className={d.status === 'active' ? 'text-green-600' : 'text-red-600'}>
-            {d.status}
-          </div>
-        </div>
+          {link.label}
+        </NavLink>
       ))}
     </aside>
   );
