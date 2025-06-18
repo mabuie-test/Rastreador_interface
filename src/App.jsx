@@ -1,42 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
 import Sidebar from './components/Sidebar';
-import MapView from './components/MapView';
-import History from './components/History';
-import DeviceWidget from './components/DeviceWidget';
-import VoiceModal from './components/VoiceModal';
+import Dashboard from './pages/Dashboard';
+import TenantList from './pages/TenantList';
+import TenantForm from './pages/TenantForm';
+import UserList from './pages/UserList';
+import UserForm from './pages/UserForm';
+import DeviceList from './pages/DeviceList';
+import DeviceForm from './pages/DeviceForm';
+import GeofenceSettings from './pages/GeofenceSettings';
 import Login from './components/Login';
 
 export default function App() {
-  const [selectedDevice, setSelectedDevice] = useState(null);
-  const [showVoice, setShowVoice]           = useState(false);
-  const [token, setToken]                   = useState(localStorage.getItem('token'));
+  const token = localStorage.getItem('token');
+  if (!token) return <Login onLogin={() => window.location.reload()} />;
 
-  // função que passa ao Login para atualizar o estado
-  const handleLogin = (newToken) => {
-    setToken(newToken);
-  };
-
-  // Se não houver token, mostra Login
-  if (!token) {
-    return <Login onLogin={handleLogin} />;
-  }
-
-  // Depois do login, renderiza o dashboard
   return (
-    <div className="flex h-screen">
-      <Sidebar onSelect={setSelectedDevice} />
-      <div className="flex-1 flex flex-col">
-        <div className="p-2 border-b flex justify-between">
-          <DeviceWidget device={selectedDevice} onVoice={() => setShowVoice(true)} />
-        </div>
-        <div className="flex flex-1">
-          <MapView device={selectedDevice} />
-          <History device={selectedDevice} />
+    <BrowserRouter>
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 overflow-auto">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Gestão de Tenants */}
+            <Route path="/tenants" element={<TenantList />} />
+            <Route path="/tenants/new" element={<TenantForm />} />
+            <Route path="/tenants/:id" element={<TenantForm />} />
+
+            {/* Gestão de Utilizadores */}
+            <Route path="/users" element={<UserList />} />
+            <Route path="/users/new" element={<UserForm />} />
+            <Route path="/users/:id" element={<UserForm />} />
+
+            {/* Gestão de Dispositivos */}
+            <Route path="/devices/manage" element={<DeviceList />} />
+            <Route path="/devices/new" element={<DeviceForm />} />
+            <Route path="/devices/:id" element={<DeviceForm />} />
+
+            {/* Geofence */}
+            <Route path="/geofence/:deviceId" element={<GeofenceSettings />} />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Routes>
         </div>
       </div>
-      {showVoice && (
-        <VoiceModal onClose={() => setShowVoice(false)} device={selectedDevice} />
-      )}
-    </div>
+    </BrowserRouter>
   );
 }
