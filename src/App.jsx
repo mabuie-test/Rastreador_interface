@@ -36,10 +36,10 @@ export default function App() {
             <Route path="/users/new" element={<UserForm />} />
             <Route path="/users/:id" element={<UserForm />} />
 
-            {/* Gestão de Dispositivos */}
-            <Route path="/devices/manage" element={<DeviceList />} />
-            <Route path="/devices/new" element={<DeviceForm />} />
-            <Route path="/devices/:id" element={<DeviceForm />} />
+        {/* Gestão de Dispositivos */}
+<Route path="/devices"      element={<DeviceList />} />
+<Route path="/devices/new"  element={<DeviceForm />} />
+<Route path="/devices/:id"  element={<DeviceForm />} />
 
             {/* Geofence */}
             <Route path="/geofence/:deviceId" element={<GeofenceSettings />} />
