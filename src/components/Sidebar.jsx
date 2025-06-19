@@ -6,7 +6,7 @@ export default function Sidebar() {
     { to: '/dashboard',      label: 'Dashboard' },
     { to: '/tenants',        label: 'Tenants' },
     { to: '/users',          label: 'Utilizadores' },
-    { to: '/devices/manage', label: 'Dispositivos' }
+    { to: '/devices', label: 'Dispositivos' }
   ];
 
   return (
